@@ -19,7 +19,6 @@ const getSegments = (path: string): string[] => path.split("/").filter(Boolean);
 const matchPath = (pattern: string, pathname: string): RouteParams | null => {
   const patternSegments = getSegments(pattern);
   const pathnameSegments = getSegments(pathname);
-
   if (patternSegments.length !== pathnameSegments.length) {
     return null;
   }

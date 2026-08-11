@@ -1,12 +1,10 @@
 import type { RouteHandler } from "../router.js";
 
-export const jobHandler: RouteHandler = (_req, res, params) => {
-  const { id } = params;
-
+export const listJobHandler: RouteHandler = (_req, res, _params) => {
   res.statusCode = 200;
   res.setHeader("Content-Type", "application/json");
   const body = {
-    id,
+    jobs: [],
   };
   res.end(JSON.stringify(body));
 };
