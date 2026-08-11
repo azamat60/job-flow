@@ -6,7 +6,7 @@ export class PayloadTooLargeError extends Error {}
 
 export class RequestBodyError extends Error {}
 
-const EMPTY_BODY = {};
+const EMPTY_BODY = Object.freeze({});
 
 export const readJson = async (
   req: IncomingMessage,

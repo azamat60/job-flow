@@ -9,7 +9,7 @@ export const postJobHandler: RouteHandler = (_req, res, _params, body) => {
     return;
   }
 
-  res.statusCode = 200;
+  res.statusCode = 201;
   res.setHeader("Content-Type", "application/json");
   const responseBody = {
     message: "Job created successfully",
