@@ -5,9 +5,9 @@ const PORT = process.env.PORT || 8080;
 
 const server = http.createServer(
   (req: http.IncomingMessage, res: http.ServerResponse) => {
-    const url = req.url ?? "/";
+    const pathname = new URL(req.url ?? "/", "http://localhost").pathname;
 
-    if (req.method === "GET" && url === "/health") {
+    if (req.method === "GET" && pathname === "/health") {
       const body = { status: "ok", uptime: process.uptime() };
 
       res.statusCode = 200;
@@ -16,7 +16,7 @@ const server = http.createServer(
       return;
     }
 
-    if (req.method === "GET" && url === "/") {
+    if (req.method === "GET" && pathname === "/") {
       res.statusCode = 200;
       res.setHeader("Content-Type", "text/plain");
       res.end("Hello, World!");
