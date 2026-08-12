@@ -15,10 +15,15 @@ export const postJobHandler: RouteHandler = async (
     return;
   }
 
+  if (!body.title || typeof body.title !== "string") {
+    res.statusCode = 400;
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify({ error: "Title is required" }));
+    return;
+  }
+
+  const job = await repository.create({ title: body.title });
   res.statusCode = 201;
   res.setHeader("Content-Type", "application/json");
-  const responseBody = {
-    job: await repository.create({ title: body.title as string }),
-  };
-  res.end(JSON.stringify(responseBody));
+  res.end(JSON.stringify({ job }));
 };

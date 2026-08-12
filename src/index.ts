@@ -50,7 +50,7 @@ const server = http.createServer(
       return;
     }
 
-    match.handler(req, res, match.params, jobRepository, body);
+    void match.handler(req, res, match.params, jobRepository, body);
   },
 );
 
