@@ -1,11 +1,13 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 
+import type { JobRepository } from "./repositories/job-repository.js";
 export type RouteParams = Record<string, string>;
 
 export type RouteHandler = (
   req: IncomingMessage,
   res: ServerResponse,
   params: RouteParams,
+  repository: JobRepository,
   body?: unknown,
 ) => void;
 

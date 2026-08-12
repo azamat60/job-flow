@@ -3,16 +3,19 @@ import "dotenv/config";
 
 import { routes } from "./routes.js";
 import { findRoute } from "./router.js";
-const PORT = process.env.PORT || 8080;
 import {
   readJson,
   PayloadTooLargeError,
   InvalidJsonError,
 } from "./readJson.js";
 import { sendJson } from "./helpers/sendJson.js";
+import { InMemoryJobRepository } from "./repositories/job-repository.js";
 
+const PORT = process.env.PORT || 8080;
 const MAX_BODY_BYTES = 100 * 1024;
 const METHODS_WITH_BODY = ["POST", "PUT", "PATCH", "DELETE"];
+
+const jobRepository = new InMemoryJobRepository();
 
 const server = http.createServer(
   async (req: http.IncomingMessage, res: http.ServerResponse) => {
@@ -46,7 +49,7 @@ const server = http.createServer(
       return;
     }
 
-    match.handler(req, res, match.params, body);
+    void match.handler(req, res, match.params, jobRepository, body);
   },
 );
 
