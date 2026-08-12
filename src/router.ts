@@ -6,6 +6,7 @@ export type RouteHandler = (
   req: IncomingMessage,
   res: ServerResponse,
   params: RouteParams,
+  body?: unknown,
 ) => void;
 
 export type Route = {
