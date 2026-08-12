@@ -24,9 +24,8 @@ const server = http.createServer(
     const match = findRoute(routes, method, requestUrl.pathname);
 
     if (!match) {
-      res.statusCode = 404;
-      res.setHeader("Content-Type", "text/plain");
-      res.end("Not Found");
+      req.resume();
+      sendJson(res, 404, { error: "Not Found" });
       return;
     }
 
