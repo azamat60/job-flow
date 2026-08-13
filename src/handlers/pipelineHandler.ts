@@ -1,7 +1,7 @@
 import type { RouteHandler } from "../router.js";
 import { isObjectBody } from "../helpers/isBodyObject.js";
 
-export const getJobHandler: RouteHandler = async (
+export const getPipelineHandler: RouteHandler = async (
   _req,
   res,
   params,
@@ -10,18 +10,18 @@ export const getJobHandler: RouteHandler = async (
   const { id } = params;
 
   res.setHeader("Content-Type", "application/json");
-  const job = await repositories.jobRepository.findById(id);
+  const pipeline = await repositories.pipelineRepository.findById(id);
 
-  if (!job) {
+  if (!pipeline) {
     res.statusCode = 404;
-    res.end(JSON.stringify({ error: "Job not found" }));
+    res.end(JSON.stringify({ error: "Pipeline not found" }));
     return;
   }
   res.statusCode = 200;
-  res.end(JSON.stringify({ job }));
+  res.end(JSON.stringify({ pipeline }));
 };
 
-export const getAllJobsHandler: RouteHandler = async (
+export const getAllPipelinesHandler: RouteHandler = async (
   _req,
   res,
   _params,
@@ -30,12 +30,12 @@ export const getAllJobsHandler: RouteHandler = async (
   res.statusCode = 200;
   res.setHeader("Content-Type", "application/json");
   const body = {
-    jobs: await repositories.jobRepository.findAll(),
+    pipelines: await repositories.pipelineRepository.findAll(),
   };
   res.end(JSON.stringify(body));
 };
 
-export const postJobHandler: RouteHandler = async (
+export const postPipelineHandler: RouteHandler = async (
   _req,
   res,
   _params,
@@ -49,35 +49,32 @@ export const postJobHandler: RouteHandler = async (
     return;
   }
 
-  if (!body.name || typeof body.name !== "string") {
+  if (!body.name || typeof body.name !== "string" || !body.name.trim()) {
     res.statusCode = 400;
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({ error: "Name is required" }));
     return;
   }
 
-  if (!body.pipelineId || typeof body.pipelineId !== "string") {
+  if (!body.steps || !Array.isArray(body.steps) || !body.steps.length) {
     res.statusCode = 400;
     res.setHeader("Content-Type", "application/json");
-    res.end(JSON.stringify({ error: "Pipeline ID is required" }));
+    res.end(JSON.stringify({ error: "Steps is required" }));
     return;
   }
 
-  const currentPipeline = await repositories.pipelineRepository.findById(
-    body.pipelineId,
-  );
-  if (!currentPipeline) {
+  if (!body.steps.every((step) => typeof step === "string" && step.trim())) {
     res.statusCode = 400;
     res.setHeader("Content-Type", "application/json");
-    res.end(JSON.stringify({ error: "Pipeline not found" }));
+    res.end(JSON.stringify({ error: "Steps must be an array of strings" }));
     return;
   }
 
-  const job = await repositories.jobRepository.create({
+  const pipeline = await repositories.pipelineRepository.create({
     name: body.name,
-    pipeline: currentPipeline,
+    steps: body.steps,
   });
   res.statusCode = 201;
   res.setHeader("Content-Type", "application/json");
-  res.end(JSON.stringify({ job }));
+  res.end(JSON.stringify({ pipeline }));
 };

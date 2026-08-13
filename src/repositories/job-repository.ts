@@ -13,9 +13,15 @@ export class InMemoryJobRepository implements JobRepository {
   async create(input: CreateJobInput): Promise<Job> {
     const job: Job = {
       id: randomUUID(),
-      title: input.title,
+      name: input.name,
+      pipelineId: input.pipeline.id,
       status: "pending",
       createdAt: new Date(),
+      steps: input.pipeline.steps.map((step) => ({
+        id: randomUUID(),
+        name: step.name,
+        status: "pending",
+      })),
     };
     this.jobs.set(job.id, job);
     return job;
