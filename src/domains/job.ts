@@ -2,11 +2,21 @@ export type JobStatus = "pending" | "in_progress" | "completed" | "failed";
 
 export interface Job {
   id: string;
-  title: string;
+  name: string;
   status: JobStatus;
+  pipelineId: string;
   createdAt: Date;
+  steps: JobStep[];
+}
+
+export interface JobStep {
+  id: string;
+  name: string;
+  status: JobStatus;
 }
 
 export interface CreateJobInput {
-  title: string;
+  name: string;
+  pipelineId: string;
+  steps: string[];
 }

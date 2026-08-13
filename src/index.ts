@@ -2,7 +2,7 @@ import http from "node:http";
 import "dotenv/config";
 
 import { routes } from "./routes.js";
-import { findRoute } from "./router.js";
+import { findRoute, Repositories } from "./router.js";
 import {
   readJson,
   PayloadTooLargeError,
@@ -10,12 +10,19 @@ import {
 } from "./readJson.js";
 import { sendJson } from "./helpers/sendJson.js";
 import { InMemoryJobRepository } from "./repositories/job-repository.js";
+import { InMemoryPipelineRepository } from "./repositories/pipeline-repository.js";
 
 const PORT = process.env.PORT || 8080;
 const MAX_BODY_BYTES = 100 * 1024;
 const METHODS_WITH_BODY = ["POST", "PUT", "PATCH", "DELETE"];
 
 const jobRepository = new InMemoryJobRepository();
+const pipelineRepository = new InMemoryPipelineRepository();
+
+const repositories: Repositories = {
+  jobRepository,
+  pipelineRepository,
+};
 
 const server = http.createServer(
   async (req: http.IncomingMessage, res: http.ServerResponse) => {
@@ -49,7 +56,7 @@ const server = http.createServer(
       return;
     }
 
-    void match.handler(req, res, match.params, jobRepository, body);
+    void match.handler(req, res, match.params, repositories, body);
   },
 );
 
