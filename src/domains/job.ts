@@ -1,3 +1,5 @@
+import { Pipeline } from "./pipeline.js";
+
 export type JobStatus = "pending" | "in_progress" | "completed" | "failed";
 
 export interface Job {
@@ -17,6 +19,5 @@ export interface JobStep {
 
 export interface CreateJobInput {
   name: string;
-  pipelineId: string;
-  steps: string[];
+  pipeline: Pipeline;
 }

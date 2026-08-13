@@ -49,21 +49,21 @@ export const postPipelineHandler: RouteHandler = async (
     return;
   }
 
-  if (!body.name || typeof body.name !== "string") {
+  if (!body.name || typeof body.name !== "string" || !body.name.trim()) {
     res.statusCode = 400;
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({ error: "Name is required" }));
     return;
   }
 
-  if (!body.steps || !Array.isArray(body.steps)) {
+  if (!body.steps || !Array.isArray(body.steps) || !body.steps.length) {
     res.statusCode = 400;
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({ error: "Steps is required" }));
     return;
   }
 
-  if (!body.steps.every((step) => typeof step === "string")) {
+  if (!body.steps.every((step) => typeof step === "string" && step.trim())) {
     res.statusCode = 400;
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({ error: "Steps must be an array of strings" }));

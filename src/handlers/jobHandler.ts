@@ -75,8 +75,7 @@ export const postJobHandler: RouteHandler = async (
 
   const job = await repositories.jobRepository.create({
     name: body.name,
-    pipelineId: body.pipelineId,
-    steps: currentPipeline.steps.map((step) => step.name),
+    pipeline: currentPipeline,
   });
   res.statusCode = 201;
   res.setHeader("Content-Type", "application/json");

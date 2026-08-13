@@ -14,12 +14,12 @@ export class InMemoryJobRepository implements JobRepository {
     const job: Job = {
       id: randomUUID(),
       name: input.name,
-      pipelineId: input.pipelineId,
+      pipelineId: input.pipeline.id,
       status: "pending",
       createdAt: new Date(),
-      steps: input.steps.map((stepName) => ({
+      steps: input.pipeline.steps.map((step) => ({
         id: randomUUID(),
-        name: stepName,
+        name: step.name,
         status: "pending",
       })),
     };
