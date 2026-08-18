@@ -5,12 +5,12 @@ export const getPipelineHandler: RouteHandler = async (
   _req,
   res,
   params,
-  repositories,
+  dependencies,
 ) => {
   const { id } = params;
 
   res.setHeader("Content-Type", "application/json");
-  const pipeline = await repositories.pipelineRepository.findById(id);
+  const pipeline = await dependencies.pipelineRepository.findById(id);
 
   if (!pipeline) {
     res.statusCode = 404;

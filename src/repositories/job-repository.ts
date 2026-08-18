@@ -5,6 +5,7 @@ export interface JobRepository {
   create(input: CreateJobInput): Promise<Job>;
   findById(id: string): Promise<Job | undefined>;
   findAll(): Promise<Job[]>;
+  save(job: Job): Promise<void>;
 }
 
 export class InMemoryJobRepository implements JobRepository {
@@ -15,7 +16,7 @@ export class InMemoryJobRepository implements JobRepository {
       id: randomUUID(),
       name: input.name,
       pipelineId: input.pipeline.id,
-      status: "pending",
+      status: "queued",
       createdAt: new Date(),
       steps: input.pipeline.steps.map((step) => ({
         id: randomUUID(),
@@ -33,5 +34,9 @@ export class InMemoryJobRepository implements JobRepository {
 
   async findAll(): Promise<Job[]> {
     return Array.from(this.jobs.values());
+  }
+
+  async save(job: Job): Promise<void> {
+    this.jobs.set(job.id, job);
   }
 }

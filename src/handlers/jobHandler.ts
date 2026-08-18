@@ -5,12 +5,12 @@ export const getJobHandler: RouteHandler = async (
   _req,
   res,
   params,
-  repositories,
+  dependencies,
 ) => {
   const { id } = params;
 
   res.setHeader("Content-Type", "application/json");
-  const job = await repositories.jobRepository.findById(id);
+  const job = await dependencies.jobRepository.findById(id);
 
   if (!job) {
     res.statusCode = 404;
@@ -25,12 +25,12 @@ export const getAllJobsHandler: RouteHandler = async (
   _req,
   res,
   _params,
-  repositories,
+  dependencies,
 ) => {
   res.statusCode = 200;
   res.setHeader("Content-Type", "application/json");
   const body = {
-    jobs: await repositories.jobRepository.findAll(),
+    jobs: await dependencies.jobRepository.findAll(),
   };
   res.end(JSON.stringify(body));
 };
@@ -39,7 +39,7 @@ export const postJobHandler: RouteHandler = async (
   _req,
   res,
   _params,
-  repositories,
+  dependencies,
   body,
 ) => {
   if (!isObjectBody(body)) {
@@ -63,7 +63,7 @@ export const postJobHandler: RouteHandler = async (
     return;
   }
 
-  const currentPipeline = await repositories.pipelineRepository.findById(
+  const currentPipeline = await dependencies.pipelineRepository.findById(
     body.pipelineId,
   );
   if (!currentPipeline) {
@@ -73,10 +73,13 @@ export const postJobHandler: RouteHandler = async (
     return;
   }
 
-  const job = await repositories.jobRepository.create({
+  const job = await dependencies.jobRepository.create({
     name: body.name,
     pipeline: currentPipeline,
   });
+
+  void dependencies.jobExecutor.execute(job.id);
+
   res.statusCode = 201;
   res.setHeader("Content-Type", "application/json");
   res.end(JSON.stringify({ job }));
