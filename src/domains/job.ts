@@ -1,7 +1,7 @@
 import { Pipeline } from "./pipeline.js";
 
 export type JobStatus = "queued" | "in_progress" | "completed" | "failed";
-export type JobStepStatus = "pending" | Omit<JobStatus, "queued">;
+export type JobStepStatus = "pending" | Exclude<JobStatus, "queued">;
 
 export interface Job {
   id: string;

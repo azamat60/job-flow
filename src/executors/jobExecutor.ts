@@ -44,7 +44,7 @@ export class JobExecutor {
   }
 
   private async executeStep(job: Job, step: JobStep): Promise<boolean> {
-    step.status = "running";
+    step.status = "in_progress";
     step.startedAt = new Date();
     await this.jobRepository.save(job);
 
