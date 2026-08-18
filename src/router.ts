@@ -2,18 +2,20 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 
 import type { JobRepository } from "./repositories/job-repository.js";
 import { PipelineRepository } from "./repositories/pipeline-repository.js";
+import { JobExecutor } from "./executors/jobExecutor.js";
 export type RouteParams = Record<string, string>;
 
-export type Repositories = {
+export type Dependencies = {
   jobRepository: JobRepository;
   pipelineRepository: PipelineRepository;
+  jobExecutor: JobExecutor;
 };
 
 export type RouteHandler = (
   req: IncomingMessage,
   res: ServerResponse,
   params: RouteParams,
-  repositories: Repositories,
+  dependencies: Dependencies,
   body?: unknown,
 ) => void;
 
